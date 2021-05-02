@@ -29,7 +29,11 @@ void LSR32IO::setPins(int cs_pin, int sck_pin, int miso_pin, int mosi_pin, int l
     LSR_LATCH = latch_pin;
     LSR_CLK_EN = en_pin;
     LSR_RESET = reset_pin;
+#ifdef __AVR__
+    spi = *SPI;
+#else
     spi = new SPIClass(mosi_pin, miso_pin, sck_pin);
+#endif
     pins_ready = true;
 }
 
