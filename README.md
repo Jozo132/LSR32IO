@@ -1,11 +1,19 @@
 # LSR32IO
-LSR 32IO Expansion library. 
-SPI I/O expansion for microcontrollers and microprocessors. 
+LSR 32IO Expansion library designed for Arduino compatible boards.
+
+# Intro 
+SPI I/O expansion module for microcontrollers and microprocessors. 
 Consists of 32 inputs and 32 outputs per module (64 pins total).
 Supports input range between +5V to +50V DC and output capability of +9V to 36V DC with each output capable of 100mA curent.
 Each input and output pin has its indicator LED like modern PLCs. This really helps to visualize and simulate different scenarios without having anything wired.
 
 ![image](https://user-images.githubusercontent.com/26510083/116824964-24bc7100-ab8d-11eb-8951-ca0015a675e2.png)
+![image](https://user-images.githubusercontent.com/26510083/116825433-a31a1280-ab8f-11eb-8481-561565455cd3.png)
+Note: running tests using the SelfCheck example with 2 of the first prototype modules in series, each having mixed ultra bright and normal LED lights.
+![image](https://user-images.githubusercontent.com/26510083/116825482-d2c91a80-ab8f-11eb-8c36-113d5e8c2c8e.png)
+![image](https://user-images.githubusercontent.com/26510083/116825527-0310b900-ab90-11eb-888f-b41a30e04680.png)
+
+
 
 # Logic
 The module uses the SPI interface to communicate with a host controller.
