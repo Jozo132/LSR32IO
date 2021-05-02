@@ -12,7 +12,7 @@ Each input and output pin has its indicator LED like modern PLCs. This really he
 Note: running tests using the SelfCheck example with 2 of the first prototype modules in series, each having mixed ultra bright and normal LED lights.
 ![image](https://user-images.githubusercontent.com/26510083/116825482-d2c91a80-ab8f-11eb-8c36-113d5e8c2c8e.png)
 ![image](https://user-images.githubusercontent.com/26510083/116825527-0310b900-ab90-11eb-888f-b41a30e04680.png)
-
+Better pictures comming soon
 
 
 # Logic
