@@ -1,0 +1,36 @@
+###################################
+# Syntax Coloring Map For NewPing
+###################################
+
+###################################
+# Datatypes (KEYWORD1)
+###################################
+
+LSR32IO	KEYWORD1
+
+###################################
+# Methods and Functions (KEYWORD2)
+###################################
+
+setInterval KEYWORD2
+begin   KEYWORD2
+loop    KEYWORD2
+availableBits   KEYWORD2
+availableBytes  KEYWORD2
+read    KEYWORD2
+readOutput  KEYWORD2
+write   KEYWORD2
+toggle  KEYWORD2
+readByte    KEYWORD2
+readOutputByte  KEYWORD2
+writeByte   KEYWORD2
+readBytes   KEYWORD2
+readOutputBytes KEYWORD2
+writeBytes  KEYWORD2
+clear   KEYWORD2
+reset   KEYWORD2
+TEST_mapInputsToOutputs	KEYWORD2
+
+###################################
+# Constants (LITERAL1)
+###################################
