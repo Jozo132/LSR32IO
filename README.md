@@ -3,7 +3,7 @@ LSR 32IO Expansion library.
 SPI I/O expansion for microcontrollers and microprocessors. 
 Consists of 32 inputs and 32 outputs per module (64 pins total).
 Supports input range between +5V to +50V DC and output capability of +9V to 36V DC with each output capable of 100mA curent.
-Each input and output pin has its indicator LED like moder PLCs. This really helps to visualize and simulate different scenarios without having anything wired.
+Each input and output pin has its indicator LED like modern PLCs. This really helps to visualize and simulate different scenarios without having anything wired.
 
 # Logic
 The module uses the SPI interface to communicate with a host controller.
