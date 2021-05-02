@@ -20,31 +20,24 @@ byte LSR32IO::toggleBit(byte b, unsigned int bit) {
     return b;
 }
 
-// Function that sets target pins and prepares the SPIClass 
-void LSR32IO::setPins(int cs_pin, int sck_pin, int miso_pin, int mosi_pin, int latch_pin, int en_pin, int reset_pin) {
-    LSR_CS = cs_pin;
-    LSR_LATCH = latch_pin;
-    LSR_CLK_EN = en_pin;
-    LSR_RESET = reset_pin;
-    pins_ready = true;
-}
-
 void LSR32IO::setSPI(int sck_pin, int miso_pin, int mosi_pin) {
     if (spi_set) return;
 #ifdef __AVR__
-    spi = *SPI; // AVR: Use native SPI
+    *spi = SPI; // AVR: Use native SPI
 #else
-    spi = new SPIClass(mosi_pin, miso_pin, sck_pin);
+    if (sck_pin >= 0 && miso_pin >= 0 && sck_pin >= 0)
+        spi = new SPIClass(mosi_pin, miso_pin, sck_pin);
+    else
+        spi = new SPIClass(MOSI, MISO, SCK); // Use default SPI
 #endif
     spi_set = true;
 }
 
 LSR32IO::LSR32IO(int cs_pin, int latch_pin, int en_pin, int reset_pin) {
-    this->setPins(cs_pin, latch_pin, en_pin, reset_pin);
-}
-LSR32IO::LSR32IO(int cs_pin, int sck_pin, int miso_pin, int mosi_pin, int latch_pin, int en_pin, int reset_pin) {
-    this->setPins(cs_pin, latch_pin, en_pin, reset_pin);
-    this->setSPI(sck_pin, miso_pin, mosi_pin);
+    LSR_CS = cs_pin;
+    LSR_LATCH = latch_pin;
+    LSR_CLK_EN = en_pin;
+    LSR_RESET = reset_pin;
 }
 
 // Function that sets the update interval used in the loop function
@@ -69,22 +62,17 @@ bool LSR32IO::begin(int new_size) {
     maxSegments = 4 * LSR32IO_MAX_STACK_SIZE;
     segmentByteCount = 4 * size;
     maxAddress = 8 * segmentByteCount - 1;
-#ifdef __AVR__
-    if (!spi_set) this->setSPI(-1, -1, -1); // AVR: Setup default SPI if not set yet
-#else
-    if (!spi_set) return false;
-#endif
-    if (!pins_ready) return false;
-    pinMode(LSR_LATCH, OUTPUT);
-    digitalWrite(LSR_LATCH, HIGH);
-    pinMode(LSR_CLK_EN, OUTPUT);
-    digitalWrite(LSR_CLK_EN, HIGH);
+    this->setSPI();
+    (*spi).begin();
     pinMode(LSR_RESET, OUTPUT);
     digitalWrite(LSR_RESET, HIGH);
     pinMode(LSR_CS, OUTPUT);
     digitalWrite(LSR_CS, HIGH);
-    (*spi).begin();
-    this->reset();
+    pinMode(LSR_CLK_EN, OUTPUT);
+    digitalWrite(LSR_CLK_EN, HIGH);
+    pinMode(LSR_LATCH, OUTPUT);
+    digitalWrite(LSR_LATCH, HIGH);
+    this->clear();
     return true;
 }
 

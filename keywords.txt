@@ -13,6 +13,7 @@ LSR32IO	KEYWORD1
 ###################################
 
 setInterval KEYWORD2
+setSPI KEYWORD2
 begin   KEYWORD2
 loop    KEYWORD2
 availableBits   KEYWORD2
