@@ -26,6 +26,7 @@ It is designed to work in industrial environments where reliable I/O control is 
 The board is designed to be connected to multiple modules of the same type serially. 
 This way we can extend the number of IO even more without using any additional pin of the host controller.
 You can choose between PNP and NPN transistor output amplifiers BUT if you decide to use PNP, you must solder a jumper between the selector pins AND use the correct transistor arrays. Everything is written on the PCB. Just make sure you have each module have its 4 matching transistor arrays.
+The inputs are passed through a tri-state buffer to trigger equally on very weak/soft signals and very strong/high signals with the same voltage output.
 
 # Software
 The library is designed to control up to 8 modules connected in series (soft limit). Because why would you need 8x32 I/O (256 inputs, 256 outputs).
