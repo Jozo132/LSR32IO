@@ -18,15 +18,13 @@
 
 class LSR32IO {
 private:
-    int LSR_SCK = -1;       // PA5
-    int LSR_MISO = -1;      // PA6
-    int LSR_MOSI = -1;      // PA7
     int LSR_LATCH = -1;     // PB5
     int LSR_CS = -1;        // PA15
     int LSR_CLK_EN = -1;    // PB4
     int LSR_RESET = -1;     // PB2
     SPIClass* spi;
     bool pins_ready = false;
+    bool spi_set = false;
     int i = 0;
     int index = 0;
     bool sizeSet = false;
@@ -45,9 +43,11 @@ private:
     byte setBit(byte b, unsigned int bit);
     byte resetBit(byte b, unsigned int bit);
     byte toggleBit(byte b, unsigned int bit);
-    void setPins(int cs_pin, int sck_pin, int miso_pin, int mosi_pin, int latch_pin, int en_pin = -1, int reset_pin = -1);
+    void setPins(int cs_pin, int latch_pin, int en_pin = -1, int reset_pin = -1);
 public:
+    LSR32IO(int cs_pin, int latch_pin, int en_pin = -1, int reset_pin = -1);
     LSR32IO(int cs_pin, int sck_pin, int miso_pin, int mosi_pin, int latch_pin, int en_pin = -1, int reset_pin = -1);
+    setSPI(int sck_pin, int miso_pin, int mosi_pin);
     void setInterval(int interval_us);
     bool begin(int new_size = 1);
     void loop();
