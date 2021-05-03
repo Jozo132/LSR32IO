@@ -1,5 +1,5 @@
 # LSR32IO
-LSR 32IO Expansion library designed for Arduino compatible boards.
+LSR 32IO Expansion library designed for Arduino compatible boards for industrial control
 
 # Intro 
 SPI I/O expansion module for microcontrollers and microprocessors. 
