@@ -33,5 +33,6 @@ The library is designed to control up to 8 modules connected in series (soft lim
 Using the library is very simple. You just connect to the 3 default SPI pins and define the other 3 control pins (4th optional reset pin) when initializing the library class object. Then in setup call the setup with the number of modules you have connected to the line. Then just start using it. Look up the examples. The examples were tested on STM32 and AVR MCUs, but it can work on any MCU that is Arduino compatible.
 
 # Hardware
+Link to the Arduino Library files files: https://github.com/Jozo132/LSR32IO
 Link to the PCB design files: https://circuitmaker.com/Projects/Details/Joe-Vovk/LSR-32IO-Expansion
 
