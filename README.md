@@ -7,7 +7,7 @@ Consists of 32 inputs and 32 outputs per module (64 pins total).
 Supports input range between +5V to +50V DC and output capability of +9V to 36V DC with each output capable of 100mA curent.
 Each input and output pin has its indicator LED like modern PLCs. This really helps to visualize and simulate different scenarios without having anything wired.
 
-![image](https://user-images.githubusercontent.com/26510083/116944338-996ada80-ac75-11eb-9109-4513d2e0213f.png)
+![image](https://user-images.githubusercontent.com/26510083/117205830-6b5ed500-adf2-11eb-9085-bcfb5019d374.png)
 ![image](https://user-images.githubusercontent.com/26510083/116825433-a31a1280-ab8f-11eb-8481-561565455cd3.png)
 Note: running tests using the SelfCheck example with 2 of the first prototype modules in series, each having mixed ultra bright and normal LED lights.
 ![image](https://user-images.githubusercontent.com/26510083/116825482-d2c91a80-ab8f-11eb-8c36-113d5e8c2c8e.png)
