@@ -28,6 +28,10 @@ writeByte   KEYWORD2
 readBytes   KEYWORD2
 readOutputBytes KEYWORD2
 writeBytes  KEYWORD2
+attachInputBit  KEYWORD2
+attachInputBit  KEYWORD2
+attachOutputBit  KEYWORD2
+attachOutputPWM  KEYWORD2
 clear   KEYWORD2
 reset   KEYWORD2
 TEST_mapInputsToOutputs	KEYWORD2

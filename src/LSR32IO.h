@@ -17,56 +17,113 @@
 #define LSR32IO_MAX_STACK_SIZE 8
 #endif // LSR32IO_MAX_STACK_SIZE
 
+
+
+
 class LSR32IO {
 private:
-    uint16_t LSR_LATCH = -1;     // PB5
-    uint16_t LSR_CS = -1;        // PA15
-    uint16_t LSR_CLK_EN = -1;    // PB4
-    uint16_t LSR_RESET = -1;     // PB2
+
+    class Debounce {
+    private:
+        int count = 0;
+        bool previous_state = false;
+        bool debounced_state = false;
+
+    public:
+        int count_target = 50;
+        Debounce(bool initialState = false, int debounce_count = 1) {
+            setCount(debounce_count);
+            debounced_state = initialState;
+        }
+        void setCount(int debounce_count) {
+            count_target = debounce_count > 0 ? debounce_count : count_target;
+        }
+        bool update(bool state) {
+            if (state == previous_state && count < count_target)
+                count++;
+            if (state != previous_state)
+                count = 0;
+            if (count >= count_target)
+                debounced_state = state;
+            previous_state = state;
+            return debounced_state;
+        }
+    };
+
+    int LSR_LATCH = -1;     // PB5
+    int LSR_CS = -1;        // PA15
+    int LSR_CLK_EN = -1;    // PB4
+    int LSR_RESET = -1;     // PB2
     SPIClass* spi;
     bool spi_set = false;
-    uint16_t i = 0;
-    uint16_t index = 0;
-    bool sizeSet = false;
-    uint16_t size = 1;
-    uint16_t segmentByteCount = 4;
-    uint16_t maxSegments = 32;
-    uint16_t maxAddress = 31;
-    uint32_t t = 0;
-    uint8_t tempByte;
-    uint8_t input[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
-    uint8_t output[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+
+    int index = 0;
+    int maxSegments = 32;
     uint32_t interval = 10;
     uint32_t interval_last = 0;
+
+    long latency_total;
+    long latency_start;
+    long latency_transfer;
+    long latency_end;
+
+    int i, j = 0;
+    bool sizeSet = false;
+    int size = 1;
+    int segmentByteCount = 4;
+    int maxSegments = 4 * LSR32IO_MAX_STACK_SIZE;
+    int maxAddress = 32 - 1;
+    long t = 0;
+    byte tempByte;
+    byte input[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+    byte output[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+    bool input_bit[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
+    bool output_bit[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
+    bool useDebounce[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
+    bool invertedInput[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
+    bool invertedOutput[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
+    Debounce* debounce[8 * 4 * LSR32IO_MAX_STACK_SIZE];
+    bool usePWM[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
+    int pwm[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { 0 };
+    int pwm_count = 0;
+    int pwm_count_overflow = 100;
+
     void latch();
 
-    uint8_t setBit(uint8_t b, uint16_t bit);
-    uint8_t resetBit(uint8_t b, uint16_t bit);
-    uint8_t invertBit(uint8_t b, uint16_t bit);
+    uint8_t setBit(uint8_t b, int bit);
+    uint8_t resetBit(uint8_t b, int bit);
+    uint8_t invertBit(uint8_t b, int bit);
+    void map_io_pointers();
+
+
 
 public:
-    static const char* version = "1.0.1";
-    LSR32IO(uint16_t cs_pin, uint16_t latch_pin, uint16_t en_pin, uint16_t reset_pin = -1);
+    static const char* version = "1.0.2";
+    LSR32IO(int cs_pin, int latch_pin, int en_pin, int reset_pin = -1);
 
-    void setSPI(uint16_t sck_pin = -1, uint16_t miso_pin = -1, uint16_t mosi_pin = -1);
-    void setInterval(uint16_t interval_us);
-    bool begin(uint16_t new_size = 1);
+    void setSPI(int sck_pin = -1, int miso_pin = -1, int mosi_pin = -1);
+    void setInterval(int interval_us);
+    void setPWMOverflow(int overflow);
+    int getPWMOverflow();
+    void resetPWMCounter();
+    bool begin(int new_size = 1);
     void loop();
 
-    uint16_t availableBits();
-    uint16_t availableBytes();
+    int availableBits();
+    int availableBytes();
 
-    bool read(uint16_t bit);
-    bool readOutput(uint16_t bit);
-    void write(uint16_t bit, bool state);
-    void toggle(uint16_t bit);
+    bool read(int bit);
+    bool readOutput(int bit);
+    void write(int bit, bool state);
+    void writePWM(int bit, int value);
+    void toggle(int bit);
 
-    uint8_t readByte(uint16_t segment);
-    uint8_t readOutputByte(uint16_t segment);
-    void writeByte(uint16_t segment, uint8_t value);
+    uint8_t readByte(int segment);
+    uint8_t readOutputByte(int segment);
+    void writeByte(int segment, uint8_t value);
     uint8_t* readBytes();
     uint8_t* readOutputBytes();
-    void writeBytes(uint8_t* value, uint16_t length);
+    void writeBytes(uint8_t* value, int length);
 
 
     bool& attachInputBit(int bit);
