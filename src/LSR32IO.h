@@ -44,6 +44,7 @@ private:
     uint8_t invertBit(uint8_t b, uint16_t bit);
 
 public:
+    static const char* version = "1.0.1";
     LSR32IO(uint16_t cs_pin, uint16_t latch_pin, uint16_t en_pin, uint16_t reset_pin = -1);
 
     void setSPI(uint16_t sck_pin = -1, uint16_t miso_pin = -1, uint16_t mosi_pin = -1);
@@ -65,6 +66,14 @@ public:
     uint8_t* readBytes();
     uint8_t* readOutputBytes();
     void writeBytes(uint8_t* value, uint16_t length);
+
+
+    bool& attachInputBit(int bit);
+    bool& attachInputBit(int bit, int debounce_cycles, bool inverted = false);
+    bool& attachInputBit(int bit, bool inverted, int debounce_cycles = 1);
+
+    bool& attachOutputBit(int bit, bool inverted = false);
+    int& attachOutputPWM(int bit, bool inverted = false);
 
     void clear();
     void reset();

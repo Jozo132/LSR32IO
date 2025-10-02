@@ -24,7 +24,7 @@ uint8_t LSR32IO::invertBit(uint8_t b, uint16_t bit) {
 void LSR32IO::setSPI(uint16_t sck_pin, uint16_t miso_pin, uint16_t mosi_pin) {
     if (spi_set) return;
 #ifdef __AVR__
-    *spi = SPI; // AVR: Use native SPI
+    * spi = SPI; // AVR: Use native SPI
 #else
     if (sck_pin >= 0 && miso_pin >= 0 && sck_pin >= 0)
         spi = new SPIClass(mosi_pin, miso_pin, sck_pin);
@@ -197,6 +197,50 @@ void LSR32IO::writeBytes(uint8_t* values, uint16_t length) {
     for (i = 0; i < length; i++)
         output[i] = values[i];
 }
+
+
+/*
+bool& attachInputBit(int bit, int debounce_cycles = 1, bool inverted = false);
+bool& attachInputBit(int bit, bool inverted = false, int debounce_cycles = 1);
+*/
+
+
+bool& LSR32IO::attachInputBit(int bit) {
+    return input_bit[bit];
+}
+bool& LSR32IO::attachInputBit(int bit, int debounce_cycles, bool inverted) {
+    if (debounce_cycles > 1) {
+        useDebounce[bit] = true;
+        debounce[bit] = new Debounce(false, debounce_cycles);
+    }
+    if (inverted) invertedInput[bit] = true;
+    return input_bit[bit];
+}
+bool& LSR32IO::attachInputBit(int bit, bool inverted, int debounce_cycles) {
+    if (debounce_cycles > 1) {
+        useDebounce[bit] = true;
+        debounce[bit] = new Debounce(false, debounce_cycles);
+    }
+    if (inverted) invertedInput[bit] = true;
+    return input_bit[bit];
+}
+
+/*
+bool& attachOutputBit(int bit, bool inverted = false);
+*/
+
+bool& LSR32IO::attachOutputBit(int bit, bool inverted) {
+    if (inverted) invertedOutput[bit] = true;
+    usePWM[bit] = false;
+    return output_bit[bit];
+}
+
+int& LSR32IO::attachOutputPWM(int bit, bool inverted) {
+    if (inverted) invertedOutput[bit] = true;
+    usePWM[bit] = true;
+    return pwm[bit];
+}
+
 
 // Function which clears all output bits
 // Note: it executes the data transfer instantly,
