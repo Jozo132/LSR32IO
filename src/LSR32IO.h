@@ -6,6 +6,7 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+#include "stdint.h"
 
 #ifndef LSR32IO_SPI_CONF
 #define LSR32IO_SPI_CONF SPISettings(4000000UL, MSBFIRST, SPI_MODE0)
