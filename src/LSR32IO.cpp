@@ -2,25 +2,26 @@
 // Author: J.Vovk <jozo132@gmail.com>
 
 #include "LSR32IO.h"
+#include "stdint.h"
 
 
-// Sets bit at position [bit] of byte [b] to 1 
-byte LSR32IO::setBit(byte b, unsigned int bit) {
+// Sets bit at position [bit] of uint8_t [b] to 1 
+uint8_t LSR32IO::setBit(uint8_t b, uint16_t bit) {
     b |= 1 << bit;
     return b;
 }
-// Sets bit at position [bit] of byte [b] to 0 
-byte LSR32IO::resetBit(byte b, unsigned int bit) {
+// Sets bit at position [bit] of uint8_t [b] to 0 
+uint8_t LSR32IO::resetBit(uint8_t b, uint16_t bit) {
     b &= ~(1 << bit);
     return b;
 }
-// Toggles bit at position [bit] of byte [b]
-byte LSR32IO::toggleBit(byte b, unsigned int bit) {
+// Toggles bit at position [bit] of uint8_t [b]
+uint8_t LSR32IO::toggleBit(uint8_t b, uint16_t bit) {
     b ^= 1UL << bit;
     return b;
 }
 
-void LSR32IO::setSPI(int sck_pin, int miso_pin, int mosi_pin) {
+void LSR32IO::setSPI(uint16_t sck_pin, uint16_t miso_pin, uint16_t mosi_pin) {
     if (spi_set) return;
 #ifdef __AVR__
     *spi = SPI; // AVR: Use native SPI
@@ -33,7 +34,7 @@ void LSR32IO::setSPI(int sck_pin, int miso_pin, int mosi_pin) {
     spi_set = true;
 }
 
-LSR32IO::LSR32IO(int cs_pin, int latch_pin, int en_pin, int reset_pin) {
+LSR32IO::LSR32IO(uint16_t cs_pin, uint16_t latch_pin, uint16_t en_pin, uint16_t reset_pin) {
     LSR_CS = cs_pin;
     LSR_LATCH = latch_pin;
     LSR_CLK_EN = en_pin;
@@ -44,7 +45,7 @@ LSR32IO::LSR32IO(int cs_pin, int latch_pin, int en_pin, int reset_pin) {
 // Unit: microseconds [us]
 // By default it's 10 [us]
 // Example:   expansion.setInterval(150);   // Changes update interval to 150us per cycle
-void LSR32IO::setInterval(int interval_us) {
+void LSR32IO::setInterval(uint16_t interval_us) {
     interval = interval_us >= 0 ? interval_us : interval;
 }
 
@@ -57,7 +58,7 @@ void LSR32IO::latch() {
 }
 
 // Initialize the module and optionaly choose the number of stacked expanison modules 
-bool LSR32IO::begin(int new_size) {
+bool LSR32IO::begin(uint16_t new_size) {
     size = new_size > 0 && new_size <= LSR32IO_MAX_STACK_SIZE ? new_size : size;
     maxSegments = 4 * LSR32IO_MAX_STACK_SIZE;
     segmentByteCount = 4 * size;
@@ -98,30 +99,30 @@ void LSR32IO::loop() {
 }
 
 // Returns the number of available bits
-int LSR32IO::availableBits() {
+uint16_t LSR32IO::availableBits() {
     return maxAddress + 1;
 }
 
 // Returns the number of available bytes
-int LSR32IO::availableBytes() {
+uint16_t LSR32IO::availableBytes() {
     return segmentByteCount;
 }
 
 // Reads the boolean bit value at the index of the input
 // Example:   bool button = expansion.read(28);  // Saves the last known input state at input 28 into bool variable [button]
-bool LSR32IO::read(int bit) {
+bool LSR32IO::read(uint16_t bit) {
     if (bit < 0 || bit > maxAddress) return false; // Avoid overflow
-    int segment = bit / 8;
-    int target = bit - segment * 8;
+    uint16_t segment = bit / 8;
+    uint16_t target = bit - segment * 8;
     return ((input[segment] >> target) & 0x01);
 }
 
 // Reads the boolean bit value at the index of the output
 // Example:   bool motor_is_on = expansion.readOutput(9);  // Saves the last known state at output 9 into bool variable [motor_is_on]
-bool LSR32IO::readOutput(int bit) {
+bool LSR32IO::readOutput(uint16_t bit) {
     if (bit < 0 || bit > maxAddress) return false; // Avoid overflow
-    int segment = bit / 8;
-    int target = bit - segment * 8;
+    uint16_t segment = bit / 8;
+    uint16_t target = bit - segment * 8;
     return ((output[segment] >> target) & 0x01);
 }
 
@@ -129,69 +130,69 @@ bool LSR32IO::readOutput(int bit) {
 // Example:   
 //      expansion.write(17, true);  // Prepares output 17 to be ON next time the loop function makes a cycle
 //      expansion.write(17, HIGH);  // Same as above, excapet using the value of HIGH
-void LSR32IO::write(int bit, bool state) {
+void LSR32IO::write(uint16_t bit, bool state) {
     if (bit < 0 || bit > maxAddress) return; // Avoid overflow
-    int segment = bit / 8;
-    int target = bit - segment * 8;
+    uint16_t segment = bit / 8;
+    uint16_t target = bit - segment * 8;
     output[segment] = state ? this->setBit(output[segment], target) : this->resetBit(output[segment], target);
 }
 
 // Toggles the state value of the target output
 // Example:   
 //      expansion.toggle(21);  // Prepares output 21 to be inverted (from 1 to 0 or vice versa) next time the loop function makes a cycle
-void LSR32IO::toggle(int bit) {
+void LSR32IO::toggle(uint16_t bit) {
     if (bit < 0 || bit > maxAddress) return; // Avoid overflow
-    int segment = bit / 8;
-    int target = bit - segment * 8;
+    uint16_t segment = bit / 8;
+    uint16_t target = bit - segment * 8;
     output[segment] = this->toggleBit(output[segment], target);
 }
 
-// Reads the byte value at requested input segment
+// Reads the uint8_t value at requested input segment
 // Each LSR 32IO Expansion has 4 bytes for inputs and 4 bytes for outputs
 // So with only one module connected, you can access between address 0 and 3
 // Example:   
-//      byte data = expansion.readByte(0);  // Reads out the last known input states into a byte of 8 bits 
-byte LSR32IO::readByte(int segment) {
+//      uint8_t data = expansion.readByte(0);  // Reads out the last known input states into a uint8_t of 8 bits 
+uint8_t LSR32IO::readByte(uint16_t segment) {
     if (segment < 0 || segment >= segmentByteCount) return 0; // Avoid overflow
     return input[segment];
 }
 
-// Reads the byte value at requested output segment
+// Reads the uint8_t value at requested output segment
 // Each LSR 32IO Expansion has 4 bytes for inputs and 4 bytes for outputs
 // So with only one module connected, you can access between address 0 and 3
 // Example:   
-//      byte data = expansion.readOutputByte(0);  // Reads out the last known output states into a byte of 8 bits 
-byte LSR32IO::readOutputByte(int segment) {
+//      uint8_t data = expansion.readOutputByte(0);  // Reads out the last known output states into a uint8_t of 8 bits 
+uint8_t LSR32IO::readOutputByte(uint16_t segment) {
     if (segment < 0 || segment >= segmentByteCount) return 0; // Avoid overflow
     return output[segment];
 }
 
-// Writes the given byte value to the requested output segment
+// Writes the given uint8_t value to the requested output segment
 // Each LSR 32IO Expansion has 4 bytes for inputs and 4 bytes for outputs
 // So with only one module connected, you can access between address 0 and 3
 // Example:   
 //      expansion.writeByte(0, 0xFF);  // Sets all first 8 [0-7] outputs to active (ON)
-void LSR32IO::writeByte(int segment, byte value) {
+void LSR32IO::writeByte(uint16_t segment, uint8_t value) {
     if (segment < 0 || segment >= segmentByteCount) return; // Avoid overflow
     output[segment] = value;
 }
 
-// Function which returns the byte array of all inputs of the expansion module
+// Function which returns the uint8_t array of all inputs of the expansion module
 // Each LSR 32IO Expansion has 4 bytes for inputs and 4 bytes for outputs
 // So with only one module connected, you will get an array of 4 input bytes
-byte* LSR32IO::readBytes() {
+uint8_t* LSR32IO::readBytes() {
     return input;
 }
 
-// Function which returns the byte array of all outputs of the expansion module
+// Function which returns the uint8_t array of all outputs of the expansion module
 // Each LSR 32IO Expansion has 4 bytes for inputs and 4 bytes for outputs
 // So with only one module connected, you will get an array of 4 output bytes
-byte* LSR32IO::readOutputBytes() {
+uint8_t* LSR32IO::readOutputBytes() {
     return output;
 }
 
 // Function which writes a sequence of bytes into the outputs with a given length
-void LSR32IO::writeBytes(byte* values, int length) {
+void LSR32IO::writeBytes(uint8_t* values, uint16_t length) {
     if (length < 0 || length >= segmentByteCount) return; // Avoid overflow
     for (i = 0; i < length; i++)
         output[i] = values[i];

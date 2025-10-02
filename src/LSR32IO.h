@@ -18,53 +18,53 @@
 
 class LSR32IO {
 private:
-    int LSR_LATCH = -1;     // PB5
-    int LSR_CS = -1;        // PA15
-    int LSR_CLK_EN = -1;    // PB4
-    int LSR_RESET = -1;     // PB2
+    uint16_t LSR_LATCH = -1;     // PB5
+    uint16_t LSR_CS = -1;        // PA15
+    uint16_t LSR_CLK_EN = -1;    // PB4
+    uint16_t LSR_RESET = -1;     // PB2
     SPIClass* spi;
     bool spi_set = false;
-    int i = 0;
-    int index = 0;
+    uint16_t i = 0;
+    uint16_t index = 0;
     bool sizeSet = false;
-    int size = 1;
-    int segmentByteCount = 4;
-    int maxSegments = 32;
-    int maxAddress = 31;
-    long t = 0;
-    byte tempByte;
-    byte input[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
-    byte output[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
-    long interval = 10;
-    long interval_last = 0;
+    uint16_t size = 1;
+    uint16_t segmentByteCount = 4;
+    uint16_t maxSegments = 32;
+    uint16_t maxAddress = 31;
+    uint32_t t = 0;
+    uint8_t tempByte;
+    uint8_t input[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+    uint8_t output[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+    uint32_t interval = 10;
+    uint32_t interval_last = 0;
     void latch();
 
-    byte setBit(byte b, unsigned int bit);
-    byte resetBit(byte b, unsigned int bit);
-    byte toggleBit(byte b, unsigned int bit);
+    uint8_t setBit(uint8_t b, unsigned uint16_t bit);
+    uint8_t resetBit(uint8_t b, unsigned uint16_t bit);
+    uint8_t toggleBit(uint8_t b, unsigned uint16_t bit);
 
 public:
-    LSR32IO(int cs_pin, int latch_pin, int en_pin, int reset_pin = -1);
+    LSR32IO(uint16_t cs_pin, uint16_t latch_pin, uint16_t en_pin, uint16_t reset_pin = -1);
 
-    void setSPI(int sck_pin = -1, int miso_pin = -1, int mosi_pin = -1);
-    void setInterval(int interval_us);
-    bool begin(int new_size = 1);
+    void setSPI(uint16_t sck_pin = -1, uint16_t miso_pin = -1, uint16_t mosi_pin = -1);
+    void setInterval(uint16_t interval_us);
+    bool begin(uint16_t new_size = 1);
     void loop();
 
-    int availableBits();
-    int availableBytes();
+    uint16_t availableBits();
+    uint16_t availableBytes();
 
-    bool read(int bit);
-    bool readOutput(int bit);
-    void write(int bit, bool state);
-    void toggle(int bit);
+    bool read(uint16_t bit);
+    bool readOutput(uint16_t bit);
+    void write(uint16_t bit, bool state);
+    void toggle(uint16_t bit);
 
-    byte readByte(int segment);
-    byte readOutputByte(int segment);
-    void writeByte(int segment, byte value);
-    byte* readBytes();
-    byte* readOutputBytes();
-    void writeBytes(byte* value, int length);
+    uint8_t readByte(uint16_t segment);
+    uint8_t readOutputByte(uint16_t segment);
+    void writeByte(uint16_t segment, uint8_t value);
+    uint8_t* readBytes();
+    uint8_t* readOutputBytes();
+    void writeBytes(uint8_t* value, uint16_t length);
 
     void clear();
     void reset();
