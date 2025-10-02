@@ -16,7 +16,7 @@ uint8_t LSR32IO::resetBit(uint8_t b, uint16_t bit) {
     return b;
 }
 // Toggles bit at position [bit] of uint8_t [b]
-uint8_t LSR32IO::toggleBit(uint8_t b, uint16_t bit) {
+uint8_t LSR32IO::invertBit(uint8_t b, uint16_t bit) {
     b ^= 1UL << bit;
     return b;
 }
@@ -144,7 +144,7 @@ void LSR32IO::toggle(uint16_t bit) {
     if (bit < 0 || bit > maxAddress) return; // Avoid overflow
     uint16_t segment = bit / 8;
     uint16_t target = bit - segment * 8;
-    output[segment] = this->toggleBit(output[segment], target);
+    output[segment] = this->invertBit(output[segment], target);
 }
 
 // Reads the uint8_t value at requested input segment

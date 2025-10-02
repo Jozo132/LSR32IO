@@ -39,9 +39,9 @@ private:
     uint32_t interval_last = 0;
     void latch();
 
-    uint8_t setBit(uint8_t b, unsigned uint16_t bit);
-    uint8_t resetBit(uint8_t b, unsigned uint16_t bit);
-    uint8_t toggleBit(uint8_t b, unsigned uint16_t bit);
+    uint8_t setBit(uint8_t b, uint16_t bit);
+    uint8_t resetBit(uint8_t b, uint16_t bit);
+    uint8_t invertBit(uint8_t b, uint16_t bit);
 
 public:
     LSR32IO(uint16_t cs_pin, uint16_t latch_pin, uint16_t en_pin, uint16_t reset_pin = -1);
