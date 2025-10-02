@@ -58,7 +58,7 @@ private:
     bool spi_set = false;
 
     int index = 0;
-    int maxSegments = 32;
+    int maxSegments = 4 * LSR32IO_MAX_STACK_SIZE;
     uint32_t interval = 10;
     uint32_t interval_last = 0;
 
@@ -71,12 +71,11 @@ private:
     bool sizeSet = false;
     int size = 1;
     int segmentByteCount = 4;
-    int maxSegments = 4 * LSR32IO_MAX_STACK_SIZE;
     int maxAddress = 32 - 1;
     long t = 0;
-    byte tempByte;
-    byte input[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
-    byte output[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+    uint8_t tempByte;
+    uint8_t input[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
+    uint8_t output[4 * LSR32IO_MAX_STACK_SIZE] = { 0x00 };
     bool input_bit[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
     bool output_bit[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
     bool useDebounce[8 * 4 * LSR32IO_MAX_STACK_SIZE] = { false };
@@ -98,7 +97,7 @@ private:
 
 
 public:
-    static const char* version = "1.0.2";
+    static constexpr const char* version = "1.0.2";
     LSR32IO(int cs_pin, int latch_pin, int en_pin, int reset_pin = -1);
 
     void setSPI(int sck_pin = -1, int miso_pin = -1, int mosi_pin = -1);
