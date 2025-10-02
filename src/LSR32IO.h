@@ -8,6 +8,12 @@
 #include <SPI.h>
 #include "stdint.h"
 
+// Cursed libraries that define these macros names, breaking my code. I'm looking at you, SPIMemory
+#undef setBit
+#undef resetBit
+#undef toggleBit
+
+
 #ifndef LSR32IO_SPI_CONF
 #define LSR32IO_SPI_CONF SPISettings(4000000UL, MSBFIRST, SPI_MODE0)
 #endif // LSR32IO_SPI_CONF
